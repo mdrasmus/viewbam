@@ -17,6 +17,103 @@ function parsePosition(text) {
 };
 
 
+var bamStyle = [
+    {
+        "type": "density",
+        "zoom": "low",
+        "style": {
+            "glyph": "HISTOGRAM",
+            "COLOR1": "black",
+            "COLOR2": "red",
+            "HEIGHT": 30
+        }
+    },
+    {
+        "type": "density",
+        "zoom": "medium",
+        "style": {
+            "glyph": "HISTOGRAM",
+            "COLOR1": "black",
+            "COLOR2": "red",
+            "HEIGHT": 30,
+            "_gradient": [
+                "rgb(0,0,0)",
+                "rgb(5,0,0)",
+                "rgb(10,0,0)",
+                "rgb(15,0,0)",
+                "rgb(20,0,0)",
+                "rgb(26,0,0)",
+                "rgb(31,0,0)",
+                "rgb(36,0,0)",
+                "rgb(41,0,0)",
+                "rgb(46,0,0)",
+                "rgb(52,0,0)",
+                "rgb(57,0,0)",
+                "rgb(62,0,0)",
+                "rgb(67,0,0)",
+                "rgb(72,0,0)",
+                "rgb(78,0,0)",
+                "rgb(83,0,0)",
+                "rgb(88,0,0)",
+                "rgb(93,0,0)",
+                "rgb(98,0,0)",
+                "rgb(104,0,0)",
+                "rgb(109,0,0)",
+                "rgb(114,0,0)",
+                "rgb(119,0,0)",
+                "rgb(124,0,0)",
+                "rgb(130,0,0)",
+                "rgb(135,0,0)",
+                "rgb(140,0,0)",
+                "rgb(145,0,0)",
+                "rgb(150,0,0)",
+                "rgb(156,0,0)",
+                "rgb(161,0,0)",
+                "rgb(166,0,0)",
+                "rgb(171,0,0)",
+                "rgb(176,0,0)",
+                "rgb(182,0,0)",
+                "rgb(187,0,0)",
+                "rgb(192,0,0)",
+                "rgb(197,0,0)",
+                "rgb(202,0,0)",
+                "rgb(208,0,0)",
+                "rgb(213,0,0)",
+                "rgb(218,0,0)",
+                "rgb(223,0,0)",
+                "rgb(228,0,0)",
+                "rgb(234,0,0)",
+                "rgb(239,0,0)",
+                "rgb(244,0,0)",
+                "rgb(249,0,0)",
+                "rgb(255,0,0)"
+            ]
+        },
+        "_typeRE": {},
+        "_labelRE": {},
+        "_methodRE": {}
+    },
+    {
+        "type": "bam",
+        "zoom": "high",
+        "style": {
+            "glyph": "__SEQUENCE",
+            "FGCOLOR": "black",
+            "BGCOLOR": "blue",
+            "HEIGHT": 8,
+            "BUMP": true,
+            "LABEL": false,
+            "ZINDEX": 20,
+            "__SEQCOLOR": "mismatch",
+            "__INSERTIONS": "yes"
+        },
+        "_typeRE": {},
+        "_labelRE": {},
+        "_methodRE": {}
+    }
+];
+
+
 var b = new Browser({
     chr:          '22',
     viewStart:    1000,
@@ -81,9 +178,9 @@ b.addViewListener(function(chr, min, max) {
     var view = chr + ":" + min + "-" + max;
 
     // change ensembl link
-    var link = document.getElementById('enslink');
+    //var link = document.getElementById('enslink');
     //link.href = 'http://www.ensembl.org/Homo_sapiens/Location/View?r=' + view;
-    link.href = 'http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=' + view;
+    //link.href = 'http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=' + view;
 
     // change url
     var query = parseQueryString(window.location.search.substr(1));
@@ -109,12 +206,7 @@ $(document).ready(function () {
     b.setLocation(view.chrom, view.start, view.end);
 
     // Remove all tiers
-    setTimeout(function() {
-        //clearTiers();
-        loadTiers();
-    }, 1000);
-    
-    //setTimeout(loadTiers, 1000);
+    setTimeout(loadTiers, 1000);
 });
 
 
@@ -126,30 +218,6 @@ function clearTiers() {
 
 
 function loadTiers() {
-    // add default tiers
-    /*
-    var tiers = [
-        {
-            name: 'Genome',
-            twoBitURI: 'http://www.biodalliance.org/datasets/hg19.2bit',
-            tier_type: 'sequence',
-            provides_entrypoints: true,
-            pinned: true
-        },
-        {
-            "name": "Genes",
-            "desc": "Gene structures from GENCODE 19",
-            "bwgURI": "http://www.biodalliance.org/datasets/gencode.bb",
-            "stylesheet_uri": "http://www.biodalliance.org/stylesheets/gencode.xml",
-            "collapseSuperGroups": true,
-            "trixURI": "http://www.biodalliance.org/datasets/geneIndex.ix"
-        }
-    ];
-    for (var i in tiers) {
-        b.addTier(tiers[i]);
-    }
-    */
-
     // set bam
     var query = parseQueryString(window.location.search.substr(1));
     
@@ -158,7 +226,8 @@ function loadTiers() {
 
         b.addTier({
             "name": "BAM",
-            "bamURI": query.bam
+            "bamURI": query.bam,
+            "style": bamStyle
         });
     }
 }
